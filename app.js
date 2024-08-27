@@ -44,7 +44,6 @@ app.get("/", (req, res, next) => {
     res.sendFile(__dirname + '/views/home-page.html');
 });
 
-
 // GET /contact
 app.get("/contact", (req, res, next) => {
     res.sendFile(__dirname + '/views/contact-page.html');
@@ -57,11 +56,22 @@ app.get("/pizzas", (req, res, next) => {
 })
 
 
+// GET /pizzas/:pizzaId
+app.get("/pizzas/:pizzaId", (req, res, next) => {
+
+    const {pizzaId} = req.params;
+
+    const pizzaToDisplay = pizzasArr.find( (element) => element.id == pizzaId );   
+
+    res.json(pizzaToDisplay);
+});
+
+
 
 
 
 app.listen(3000, () => {
-    console.log("🏃 Our app is running... ")
+    console.log("🏃 Our app is running in port... ")
 });
 
 
