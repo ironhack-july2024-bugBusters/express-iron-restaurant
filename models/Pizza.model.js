@@ -21,6 +21,10 @@ const pizzaSchema = new Schema({
         type: String,
         default: "thin",
         enum: ["thin", "extra thin", "with cheese", "with garlic"]
+    },
+    cook: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Cook"
     }
 });
 
