@@ -2,7 +2,7 @@ const express = require("express");
 const logger = require('morgan');
 
 const pizzasArr = require("./data/pizzas.js");
-
+const PORT = 3000;
 
 // Create an express server instance named `app`
 // `app` is the Express server that will be handling requests and responses
@@ -81,8 +81,8 @@ app.get("/pizzas/:pizzaId", (req, res, next) => {
 
 
 
-app.listen(3000, () => {
-    console.log("🏃 Our app is running in port... ")
+app.listen(PORT, () => {
+    console.log(`🏃 Our app is running in port... ${PORT}`);
 });
 
 
