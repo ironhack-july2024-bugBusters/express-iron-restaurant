@@ -69,15 +69,15 @@ app.get("/pizzas", (req, res, next) => {
 
     let filter = {};
 
-    if(maxPrice) {
-        filter = {price: {$lte: maxPrice}};
+    if (maxPrice) {
+        filter = { price: { $lte: maxPrice } };
     }
 
     Pizza.find(filter)
-        .then( (pizzaArr) => {
+        .then((pizzaArr) => {
             res.json(pizzaArr);
         })
-        .catch( e => {
+        .catch(e => {
             console.log("Error getting pizzas from DB...", e);
             res.status(500).json({ error: "Failed to get list of pizzas" });
         });
@@ -89,16 +89,15 @@ app.get("/pizzas/:pizzaTitle", (req, res, next) => {
 
     const { pizzaTitle } = req.params;
 
-    Pizza.findOne({title: pizzaTitle})
-        .then( (pizzaFromDB) => {
+    Pizza.findOne({ title: pizzaTitle })
+        .then((pizzaFromDB) => {
             res.json(pizzaFromDB);
         })
-        .catch( e => {
+        .catch(e => {
             console.log("Error getting pizza details from DB...", e);
             res.status(500).json({ error: "Failed to get pizza details" });
         });
 });
-
 
 
 // POST /pizzas
@@ -107,15 +106,49 @@ app.post("/pizzas", (req, res, next) => {
     const pizzaDetails = req.body;
 
     Pizza.create(pizzaDetails)
-        .then( (pizzaFromDB) => {
+        .then((pizzaFromDB) => {
             console.log("Success, pizza created!", pizzaFromDB);
             res.status(201).json(pizzaFromDB);
         })
-        .catch( e => {
+        .catch(e => {
             console.log("Error creating a new pizza...", e);
             res.status(500).json({ error: "Failed to create a new pizza" });
         });
 });
+
+
+// PUT /pizzas/:pizzaTitle
+app.put("/pizzas/:pizzaTitle", (req, res, next) => {
+
+    const { pizzaTitle } = req.params;
+    const newDetails = req.body;
+
+    Pizza.findOneAndUpdate({ title: pizzaTitle }, newDetails, { new: true })
+        .then(pizzaFromDB => {
+            res.json(pizzaFromDB);
+        })
+        .catch((error) => {
+            console.error("Error updating pizza...", error);
+            res.status(500).json({ error: "Failed to update a pizza" });
+        });
+});
+
+
+// DELETE /pizzas/:pizzaTitle
+app.delete("/pizzas/:pizzaTitle", (req, res, next) => {
+
+    const { pizzaTitle } = req.params;
+
+    Pizza.deleteOne({title: pizzaTitle})
+        .then(response => {
+            res.json(response);
+        })
+        .catch((error) => {
+            console.error("Error deleting pizza...", error);
+            res.status(500).json({ error: "Failed to delete a pizza" });
+        });
+
+})
 
 
 
