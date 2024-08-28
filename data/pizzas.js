@@ -14,7 +14,13 @@ const pizzasArr = [
     {
         id: 3,
         title: "Seafood Pizza",
+        price: 25,
         imageFile: "pizza-seafood.jpg"
+    },
+    {
+        id: 4,
+        price: 20,
+        title: "Four Cheese",
     }
 ];
 
