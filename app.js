@@ -2,8 +2,6 @@ const express = require("express");
 const logger = require('morgan');
 const mongoose = require("mongoose");
 
-const Pizza = require("./models/Pizza.model.js");
-const Cook = require("./models/Cook.model.js");
 
 const PORT = 3000;
 
@@ -63,113 +61,13 @@ app.get("/contact", (req, res, next) => {
 })
 
 
-// GET /pizzas?maxPrice=xxx
-app.get("/pizzas", (req, res, next) => {
 
-    const { maxPrice } = req.query;
+// 
+// Mount routes
+// 
 
-    let filter = {};
-
-    if (maxPrice) {
-        filter = { price: { $lte: maxPrice } };
-    }
-
-    Pizza.find(filter)
-        .populate("cook")
-        .then((pizzaArr) => {
-            res.json(pizzaArr);
-        })
-        .catch(e => {
-            console.log("Error getting pizzas from DB...", e);
-            res.status(500).json({ error: "Failed to get list of pizzas" });
-        });
-})
-
-
-// GET /pizzas/:pizzaTitle
-app.get("/pizzas/:pizzaTitle", (req, res, next) => {
-
-    const { pizzaTitle } = req.params;
-
-    Pizza.findOne({ title: pizzaTitle })
-        .populate("cook")
-        .then((pizzaFromDB) => {
-            res.json(pizzaFromDB);
-        })
-        .catch(e => {
-            console.log("Error getting pizza details from DB...", e);
-            res.status(500).json({ error: "Failed to get pizza details" });
-        });
-});
-
-
-// POST /pizzas
-app.post("/pizzas", (req, res, next) => {
-
-    const pizzaDetails = req.body;
-
-    Pizza.create(pizzaDetails)
-        .then((pizzaFromDB) => {
-            console.log("Success, pizza created!", pizzaFromDB);
-            res.status(201).json(pizzaFromDB);
-        })
-        .catch(e => {
-            console.log("Error creating a new pizza...", e);
-            res.status(500).json({ error: "Failed to create a new pizza" });
-        });
-});
-
-
-// PUT /pizzas/:pizzaTitle
-app.put("/pizzas/:pizzaTitle", (req, res, next) => {
-
-    const { pizzaTitle } = req.params;
-    const newDetails = req.body;
-
-    Pizza.findOneAndUpdate({ title: pizzaTitle }, newDetails, { new: true })
-        .then(pizzaFromDB => {
-            res.json(pizzaFromDB);
-        })
-        .catch((error) => {
-            console.error("Error updating pizza...", error);
-            res.status(500).json({ error: "Failed to update a pizza" });
-        });
-});
-
-
-// DELETE /pizzas/:pizzaTitle
-app.delete("/pizzas/:pizzaTitle", (req, res, next) => {
-
-    const { pizzaTitle } = req.params;
-
-    Pizza.deleteOne({ title: pizzaTitle })
-        .then(response => {
-            res.json(response);
-        })
-        .catch((error) => {
-            console.error("Error deleting pizza...", error);
-            res.status(500).json({ error: "Failed to delete a pizza" });
-        });
-
-})
-
-
-
-// POST /cooks - create new Cook
-app.post("/cooks", (req, res, next) => {
-
-    const cookDetails = req.body;
-
-    Cook.create(cookDetails)
-        .then((cookFromDB) => {
-            res.status(201).json(cookFromDB);
-        })
-        .catch((error) => {
-            console.error("Error creating a new cook...", error);
-            res.status(500).json({ error: "Failed to create a new cook" });
-        });
-});
-
+app.use("/", require("./routes/pizza.routes.js"));
+app.use("/", require("./routes/cook.routes.js"));
 
 
 
